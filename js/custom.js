@@ -1,160 +1,140 @@
-/******************************************
-    Version: 1.0
-/****************************************** */
+(function ($) {
 
-(function($) {
-    "use strict";
-
-	
-	// Smooth scrolling using jQuery easing
-	  $('a.js-scroll-trigger[href*="#"]:not([href="#"])').click(function() {
-		if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') && location.hostname == this.hostname) {
-		  var target = $(this.hash);
-		  target = target.length ? target : $('[name=' + this.hash.slice(1) + ']');
-		  if (target.length) {
-			$('html, body').animate({
-			  scrollTop: (target.offset().top - 54)
-			}, 1000, "easeInOutExpo");
-			return false;
-		  }
-		}
-	  });
-	
-    // Closes responsive menu when a scroll trigger link is clicked
-	  $('.js-scroll-trigger').click(function() {
-		$('.navbar-collapse').collapse('hide');
-	  });
-
-	// Activate scrollspy to add active class to navbar items on scroll
-	  $('body').scrollspy({
-		target: '#mainNav',
-		offset: 56
-	  });
-
-	// Collapse Navbar
-	  var navbarCollapse = function() {
-		if ($("#mainNav").offset().top > 100) {
-		  $("#mainNav").addClass("navbar-shrink");
-		} else {
-		  $("#mainNav").removeClass("navbar-shrink");
-		}
-	  };
-	// Collapse now if page is not at top
-	  navbarCollapse();
-	  // Collapse the navbar when page is scrolled
-	  $(window).scroll(navbarCollapse);
-
-	// Hide navbar when modals trigger
-	  $('.portfolio-modal').on('show.bs.modal', function(e) {
-		$(".navbar").addClass("d-none");
-	  })
-	  $('.portfolio-modal').on('hidden.bs.modal', function(e) {
-		$(".navbar").removeClass("d-none");
-	  })
-
-    // Scroll to top  		
-	if ($('#scroll-to-top').length) {
-		var scrollTrigger = 100, // px
-			backToTop = function () {
-				var scrollTop = $(window).scrollTop();
-				if (scrollTop > scrollTrigger) {
-					$('#scroll-to-top').addClass('show');
-				} else {
-					$('#scroll-to-top').removeClass('show');
-				}
-			};
-		backToTop();
-		$(window).on('scroll', function () {
-			backToTop();
-		});
-		$('#scroll-to-top').on('click', function (e) {
-			e.preventDefault();
-			$('html,body').animate({
-				scrollTop: 0
-			}, 700);
-		});
-	}
-	
-	// Banner 
-	
-    $('.heading').height( $(window).height() );
-	$('.parallaxie').parallaxie();
-	
-    // LOADER
-    $(window).load(function() {
-        $("#preloader").on(500).fadeOut();
-        $(".preloader").on(600).fadeOut("slow");
-    });
-
-	// Gallery Filter
-        var Container = $('.container');
-        Container.imagesLoaded(function () {
-            var portfolio = $('.gallery-menu');
-            portfolio.on('click', 'button', function () {
-                $(this).addClass('active').siblings().removeClass('active');
-                var filterValue = $(this).attr('data-filter');
-                $grid.isotope({
-                    filter: filterValue
-                });
-            });
-            var $grid = $('.gallery-list').isotope({
-                itemSelector: '.gallery-grid'
-            });
-
-        });
-	
-    // FUN FACTS   
-
-    function count($this) {
-        var current = parseInt($this.html(), 10);
-        current = current + 50; /* Where 50 is increment */
-        $this.html(++current);
-        if (current > $this.data('count')) {
-            $this.html($this.data('count'));
-        } else {
-            setTimeout(function() {
-                count($this)
-            }, 30);
-        }
+  // Back to top button
+  $(window).scroll(function () {
+    if ($(this).scrollTop() > 100) {
+      $('.back-to-top').fadeIn('slow');
+    } else {
+      $('.back-to-top').fadeOut('slow');
     }
-    $(".stat_count, .stat_count_download").each(function() {
-        $(this).data('count', parseInt($(this).html(), 10));
-        $(this).html('0');
-        count($(this));
+  });
+
+  $('.back-to-top').click(function () {
+    $('html, body').animate({
+      scrollTop: 0
+    }, 800);
+    return false;
+  });
+
+  //navigation
+  $('.navigation').onePageNav({
+    scrollOffset: 0
+  });
+
+  $(".navbar-collapse a").on('click', function () {
+    $(".navbar-collapse.collapse").removeClass('in');
+  });
+
+  //
+
+  // Smooth scroll for the get started button
+  $('.btn-get-started').on('click', function(e) {
+      e.preventDefault();
+      var target = $(this.hash);
+      if (target.length) {
+        $('html, body').animate({
+          scrollTop: target.offset().top 
+        }, 700);
+      }
+  });
+
+  // Fixed navbar
+  $(window).scroll(function () {
+
+    var scrollTop = $(window).scrollTop();
+
+    if (scrollTop > 200) {
+      $('.navbar-default').css('display', 'block');
+      $('.navbar-default').addClass('fixed-to-top');
+
+    } else if (scrollTop == 0) {
+
+      $('.navbar-default').removeClass('fixed-to-top');
+    }
+  });
+
+  // Intro carousel
+  var introCarousel = $("#introCarousel");
+  var introCarouselIndicators = $("#intro-carousel-indicators");
+  introCarousel.find(".carousel-inner").children(".item").each(function(index) {
+    (index === 0) ?
+    introCarouselIndicators.append("<li data-target='#introCarousel' data-slide-to='" + index + "' class='active'></li>") :
+    introCarouselIndicators.append("<li data-target='#introCarousel' data-slide-to='" + index + "'></li>");
+
+    $(this).css("background-image", "url('" + $(this).children('.carousel-background').children('img').attr('src') +"')");
+    $(this).children('.carousel-background').remove();
+  });
+
+  // introCarousel.on('slid.bs.carousel', function (e) {
+  //   $(this).find('h2').addClass('animated fadeInDown');
+  //   $(this).find('p').addClass('animated fadeInUp');
+  //   $(this).find('.btn-get-started').addClass('animated fadeInUp');
+  // });
+
+
+  //parallax
+  if ($('#parallax1').length || $('#parallax2').length) {
+
+    $(window).stellar({
+      responsive: true,
+      scrollProperty: 'scroll',
+      parallaxElements: false,
+      horizontalScrolling: false,
+      horizontalOffset: 0,
+      verticalOffset: 0
     });
 
-    // CONTACT
-    jQuery(document).ready(function() {
-        $('#contactform').submit(function() {
-            var action = $(this).attr('action');
-            $("#message").slideUp(750, function() {
-                $('#message').hide();
-                $('#submit')
-                    .after('<img src="images/ajax-loader.gif" class="loader" />')
-                    .attr('disabled', 'disabled');
-                $.post(action, {
-                        first_name: $('#first_name').val(),
-                        last_name: $('#last_name').val(),
-                        email: $('#email').val(),
-                        phone: $('#phone').val(),
-                        select_service: $('#select_service').val(),
-                        select_price: $('#select_price').val(),
-                        comments: $('#comments').val(),
-                        verify: $('#verify').val()
-                    },
-                    function(data) {
-                        document.getElementById('message').innerHTML = data;
-                        $('#message').slideDown('slow');
-                        $('#contactform img.loader').fadeOut('slow', function() {
-                            $(this).remove()
-                        });
-                        $('#submit').removeAttr('disabled');
-                        if (data.match('success') != null) $('#contactform').slideUp('slow');
-                    }
-                );
-            });
-            return false;
-        });
-    });
+  }
+
+  function navbar() {
+
+    if ($(window).scrollTop() > 1) {
+      $('#navigation').addClass('show-nav');
+    } else {
+      $('#navigation').removeClass('show-nav');
+    }
+
+  }
+
+  $(document).ready(function () {
+
+    var browserWidth = $(window).width();
+
+    if (browserWidth > 560) {
+
+      $(window).scroll(function () {
+        navbar();
+      });
+    }
+
+  });
+
+
+  $(window).resize(function () {
+
+    var browserWidth = $(window).width();
+
+    if (browserWidth > 560) {
+
+      $(window).scroll(function () {
+        navbar();
+      });
+    }
+
+  });
+
+
+  // Carousel
+  $('.service .carousel').carousel({
+    interval: 4000
+  })
+
+  //works
+  $(function () {
+    Grid.init();
+  });
+
+  //animation
+  new WOW().init();
 
 })(jQuery);
