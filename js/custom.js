@@ -41,16 +41,19 @@
   // Fixed navbar
   $(window).scroll(function () {
 
-    var scrollTop = $(window).scrollTop();
+    $('.navbar-default').css('display', 'block');
+    $('.navbar-default').addClass('fixed-to-top');
 
-    if (scrollTop > 200) {
-      $('.navbar-default').css('display', 'block');
-      $('.navbar-default').addClass('fixed-to-top');
+    // var scrollTop = $(window).scrollTop();
 
-    } else if (scrollTop == 0) {
+    // if (scrollTop > 200) {
+    //   $('.navbar-default').css('display', 'block');
+    //   $('.navbar-default').addClass('fixed-to-top');
 
-      $('.navbar-default').removeClass('fixed-to-top');
-    }
+    // } else if (scrollTop == 0) {
+
+    //   $('.navbar-default').removeClass('fixed-to-top');
+    // }
   });
 
   // Intro carousel
